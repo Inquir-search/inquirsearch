@@ -1,0 +1,16 @@
+{
+  "name": "basic-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.6.3",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "scripts": {
+    "start": "webpack serve --open --hot",
+    "build": "webpack --mode production"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
