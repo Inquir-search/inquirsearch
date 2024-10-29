@@ -1,20 +1,20 @@
 import EventEmitter from './EventEmitter';
 
-class SearchBox {
+class SearchBox extends EventEmitter {
     constructor(searchManager) {
+        super();
         this.searchManager = searchManager;
         this.query = '';
-        this.eventEmitter = new EventEmitter();
     }
 
     setQuery(query) {
         this.query = query;
         this.searchManager.updateQueryParams({ query });
-        this.eventEmitter.emit('queryChange', this.query);
+        this.emit('queryChange', this.query);
     }
 
     subscribe(listener) {
-        return this.eventEmitter.subscribe('queryChange', listener);
+        return this.on('queryChange', listener);
     }
 
     getQuery() {

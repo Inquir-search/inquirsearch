@@ -3,6 +3,18 @@ class EventEmitter {
         this.events = {};
     }
 
+    on(event, listener) {
+        return this.subscribe(event, listener);
+    }
+
+    once(event, listener) {
+        const wrapper = (...args) => {
+            this.unsubscribe(event, wrapper);
+            return listener(...args);
+        };
+        this.subscribe(event, wrapper);
+    }
+
     subscribe(event, listener) {
         if (!this.events[event]) {
             this.events[event] = [];
@@ -16,6 +28,10 @@ class EventEmitter {
         this.events[event] = this.events[event].filter(
             (listener) => listener !== listenerToRemove
         );
+    }
+
+    removeAllListeners() {
+        this.events = {};
     }
 
     emit(event, data) {

@@ -1,0 +1,170 @@
+.listbox {
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.15;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.item {
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.15;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    list-style: none;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    --border-opacity: 1;
+    border-color: rgba(245, 245, 250, var(--border-opacity));
+    border-bottom-width: 1px;
+    position: relative;
+}
+
+.itemTitle {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    list-style: none;
+    --border-opacity: 1;
+    line-height: 24px;
+    --text-opacity: 1;
+    color: rgba(54, 57, 90, var(--text-opacity));
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    font-weight: 600;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    order: 1;
+}
+
+.active .itemTitle {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    list-style: none;
+    --bg-opacity: 1;
+    line-height: 24px;
+    --text-opacity: 1;
+    color: rgba(255, 255, 255, var(--text-opacity));
+    font-weight: 600;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.itemSnippet { 
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    list-style: none;
+    --bg-opacity: 1;
+    --text-opacity: 1;
+    font-size: 12px;
+    line-height: 16px;
+    color: inherit;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    flex-grow: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.link {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    list-style: none;
+    --border-opacity: 1;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    text-decoration: inherit;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 24px;
+    overflow: hidden;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    padding-left: 16px;
+    padding-right: 16px;
+    --text-opacity: 1;
+    color: rgba(54, 57, 90, var(--text-opacity));
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0, 0, .2, 1);
+    transition-duration: 75ms;
+}
+
+.link.active {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    background-color: rgba(0, 61, 255, var(--bg-opacity));
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 4px 11px 0 rgba(37, 44, 97, .15), 0 1px 3px 0 rgba(93, 100, 148, .2);
+    --text-opacity: 1;
+    color: rgba(255, 255, 255, var(--text-opacity));
+}
+
+.nothing, .nothing svg {
+    --text-opacity: 1;
+    color: rgba(54, 57, 90, var(--text-opacity));
+}
+
+.nothing svg {
+    margin: auto;
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.15;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    text-align: center;
+    fill: none;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    display: block;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 40px;
+    margin-bottom: 32px;
+    stroke: currentColor;
+    --text-opacity: 1;
+    color: rgba(150, 152, 195, var(--text-opacity));
+}
+
+.loadingContainer {
+    display: flex;
+    height: 320px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loadingContainer svg {
+    width: 50px;
+    --text-opacity: 1;
+    color: rgba(119, 122, 175, var(--text-opacity))
+}

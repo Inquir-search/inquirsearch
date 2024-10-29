@@ -3,8 +3,9 @@ import { SearchManager } from '@inquir/inquirsearch';
 
 const SearchContext = createContext({});
 
-export const SearchProvider = ({ apiKey, indexName, children }) => {
-    const { current: searchManager } = useRef(new SearchManager({ apiKey, indexName }));
+export const SearchProvider = (props) => {
+    const { debounce, apiKey, indexName, children, ...state } = props
+    const { current: searchManager } = useRef(new SearchManager({ apiKey, indexName, debounce, state }));
 
     const value = useMemo(() => ({
         searchManager,
