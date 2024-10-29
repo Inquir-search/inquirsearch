@@ -1,0 +1,90 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    /* Add padding to ensure proper spacing on small screens */
+}
+
+.modalContent {
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.15;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 320px;
+    box-shadow: 0 8px 22px 0 rgba(37, 44, 97, 0.15), 0 4px 6px 0 rgba(93, 100, 148, 0.2);
+    width: 100%;
+    max-width: 1040px;
+    max-height: 832px;
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    /* Allows content to scroll if too long */
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.openButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modalContent {
+        max-width: 100%;
+        height: auto;
+        min-height: 60%;
+        /* Ensure it's still visible on small screens */
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .modalOverlay {
+        padding: 10px;
+        /* Reduce overlay padding on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .modalContent {
+        font-size: 13px;
+        /* Slightly reduce font size for very small screens */
+        max-width: 100%;
+        min-height: 50%;
+        padding: 10px;
+    }
+
+    .openButton {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+}

@@ -2,8 +2,9 @@ import EventEmitter from './EventEmitter';
 import { BASE_URL } from './constants';
 
 class SearchManager {
-    constructor({ apiKey, indexName }) {
+    constructor({ apiKey, indexName, debouce = 50 }) {
         this.apiKey = apiKey;
+        this.debouce = debouce;
         this.state = {
             query: '',
             indexName,
@@ -17,6 +18,14 @@ class SearchManager {
         this.eventEmitter = new EventEmitter();
         this.executeSearch = this.executeSearch.bind(this);
         this.debounceTimeout = null;
+    }
+
+    updateQuery(query) {
+        this.state = {
+            ...this.state,
+            query,
+        };
+        this.notify('queryChange', this.state);
     }
 
     subscribe(eventName, listener) {
@@ -90,7 +99,7 @@ class SearchManager {
                 console.error('Search error:', error);
                 this.notify('error', error);
             });
-        }, 250);
+        }, this.debouce);
     }
 }
 
