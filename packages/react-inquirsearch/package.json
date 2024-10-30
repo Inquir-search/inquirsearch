@@ -1,0 +1,37 @@
+{
+  "name": "@inquir/react-inquirsearch",
+  "version": "1.0.0",
+  "description": "React components for Inquir Search",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "webpack --mode development --watch",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "css-loader": "^7.1.2",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.2",
+    "mini-css-extract-plugin": "^2.9.1",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT"
+}

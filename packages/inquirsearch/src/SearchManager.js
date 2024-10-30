@@ -1,9 +1,11 @@
 import EventEmitter from './EventEmitter';
 import { BASE_URL } from './constants';
 
-class SearchManager {
-    constructor({ apiKey, indexName }) {
+class SearchManager extends EventEmitter {
+    constructor({ apiKey, indexName, debounce = 0, state = {} }) {
+        super();
         this.apiKey = apiKey;
+        this.debounce = debounce;
         this.state = {
             query: '',
             indexName,
@@ -13,25 +15,33 @@ class SearchManager {
             fields: [],
             searchFields: [],
             results: [],
+            loading: false,
+            unique: true,
+            ...state,
         };
-        this.eventEmitter = new EventEmitter();
         this.executeSearch = this.executeSearch.bind(this);
         this.debounceTimeout = null;
     }
 
-    subscribe(eventName, listener) {
-        return this.eventEmitter.subscribe(eventName, listener);
+    setState(newState) {
+        this.state = {
+            ...this.state,
+            ...newState,
+        };
+    }
+
+    updateQuery(query) {
+        this.setState({ query });
+        this.notify('queryChange', this.state);
+        this.executeSearch();
     }
 
     notify(eventName, data) {
-        this.eventEmitter.emit(eventName, data);
+        this.emit(eventName, data);
     }
 
     updateQueryParams(params) {
-        this.state = {
-            ...this.state,
-            ...params,
-        };
+        this.setState(params);
         this.notify('queryParamsChange', this.state);
     }
 
@@ -44,6 +54,7 @@ class SearchManager {
             facets,
             fields,
             searchFields,
+            unique,
         } = this.state;
 
         const queryObject = {
@@ -54,6 +65,7 @@ class SearchManager {
             facets,
             fields,
             searchFields,
+            unique
         };
 
         Object.keys(queryObject).forEach(
@@ -64,11 +76,12 @@ class SearchManager {
     }
 
     executeSearch() {
-        clearTimeout(this.debounceTimeout); // Clear the previous timeout if any
-
+        clearTimeout(this.debounceTimeout);
         this.debounceTimeout = setTimeout(() => {
+            this.setState({ loading: true });
+            this.notify('loading', true);
             const queryObject = this.buildQueryObject();
-            const apiUrl = BASE_URL + '/api/v1/search/query';
+            const apiUrl = `${BASE_URL}/api/v1/search/query`;
             fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -84,13 +97,16 @@ class SearchManager {
                 }
                 return response.json();
             }).then((data) => {
-                this.state.results = data.result.results || [];
+                this.setState({ results: data.result.results || [], loading: false });
                 this.notify('resultsChange', this.state.results);
+                this.notify('loading', false); // Notify listeners that loading is complete
             }).catch((error) => {
                 console.error('Search error:', error);
+                this.setState({ loading: false }); // Set loading to false on error
                 this.notify('error', error);
+                this.notify('loading', false); // Notify listeners that loading is complete
             });
-        }, 250);
+        }, this.debounce);
     }
 }
 

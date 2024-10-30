@@ -1,0 +1,80 @@
+.v39_337 {
+    width: 100%;
+}
+
+.v39_338 {
+    width: 100%;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.15;
+    -webkit-font-smoothing: antialiased;
+    font-family: Open Sans, system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 14px;
+    --bg-opacity: 1;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    border-color: rgba(119, 122, 175, .1);
+    border-bottom-width: 1px;
+    display: flex;
+    align-items: center;
+    flex: none;
+    height: 72px;
+    max-height: 72px;
+}
+
+.searchBoxForm {
+    display: flex;
+}
+
+.searchIcon {
+    display: block;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    --text-opacity: 1;
+    color: rgba(119, 122, 175, var(--text-opacity));
+}
+
+.searchInput {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    --bg-opacity: 1;
+    border: 0 solid #003dff;
+    box-sizing: border-box;
+    font-family: inherit;
+    margin: 0;
+    padding: 0;
+    outline-offset: -2px;
+    appearance: none;
+    background-color: transparent;
+    border-radius: 0;
+    flex: 1 1 0%;
+    height: 100%;
+    line-height: normal;
+    outline: 0;
+    box-shadow: none;
+    --text-opacity: 1;
+    color: rgba(150, 152, 195, var(--text-opacity));
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .2s;
+    caret-color: #141b3b;
+    font-size: 24px;
+    width: 100%;
+}
+
+.clearButton {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}

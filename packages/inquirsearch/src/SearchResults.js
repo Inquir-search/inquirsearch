@@ -1,22 +1,18 @@
-// SearchResults.js
 import EventEmitter from './EventEmitter';
 
-class SearchResults {
+class SearchResults extends EventEmitter {
     constructor(searchManager) {
+        super();
         this.searchManager = searchManager;
         this.results = [];
-        this.eventEmitter = new EventEmitter();
         this.updateResults = this.updateResults.bind(this);
-        this.unsubscribeFromSearchManager = this.searchManager.subscribe('resultsChange', this.updateResults);
+        this.unsubscribeFromSearchManager = this.searchManager
+            .on('resultsChange', this.updateResults);
     }
 
     updateResults(results) {
         this.results = results;
-        this.eventEmitter.emit('resultsChange', this.results);
-    }
-
-    subscribe(listener) {
-        return this.eventEmitter.subscribe('resultsChange', listener);
+        this.emit('resultsChange', this.results);
     }
 
     getResults() {
@@ -24,7 +20,10 @@ class SearchResults {
     }
 
     destroy() {
-        this.unsubscribeFromSearchManager();
+        if (this.unsubscribeFromSearchManager) {
+            this.unsubscribeFromSearchManager();
+        }
+        this.removeAllListeners('resultsChange');
     }
 }
 

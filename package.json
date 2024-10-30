@@ -3,7 +3,9 @@
   "private": true,
   "workspaces": [
     "examples/basic-example",
-    "packages/inquirsearch"
+    "packages/inquirsearch",
+    "packages/react-inquirsearch",
+    "examples/react-example"
   ],
   "devDependencies": {
     "@babel/cli": "^7.25.9",
