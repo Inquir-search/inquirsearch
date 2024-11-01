@@ -1,5 +1,7 @@
 # Inquir Search Library
 
+Check out Inquir: https://inquir.org/
+
 ## Table of Contents
 - [Inquir Search Library](#inquir-search-library)
   - [Table of Contents](#table-of-contents)
