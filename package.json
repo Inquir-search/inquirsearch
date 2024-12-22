@@ -32,8 +32,9 @@
     "example": "examples",
     "test": "tests"
   },
-  "dependencies": {},
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+  }
 }

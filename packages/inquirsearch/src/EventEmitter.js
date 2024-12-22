@@ -4,15 +4,11 @@ class EventEmitter {
     }
 
     on(event, listener) {
-        return this.subscribe(event, listener);
-    }
-
-    once(event, listener) {
-        const wrapper = (...args) => {
-            this.unsubscribe(event, wrapper);
-            return listener(...args);
-        };
-        this.subscribe(event, wrapper);
+        if (!this.events[event]) {
+            this.events[event] = [];
+        }
+        this.events[event].push(listener);
+        return () => this.unsubscribe(event, listener);
     }
 
     subscribe(event, listener) {
@@ -23,6 +19,14 @@ class EventEmitter {
         return () => this.unsubscribe(event, listener);
     }
 
+    once(event, listener) {
+        const wrapper = (...args) => {
+            this.unsubscribe(event, wrapper);
+            return listener(...args);
+        };
+        this.on(event, wrapper);
+    }
+
     unsubscribe(event, listenerToRemove) {
         if (!this.events[event]) return;
         this.events[event] = this.events[event].filter(
@@ -30,12 +34,16 @@ class EventEmitter {
         );
     }
 
+    off(event, listenerToRemove) {
+        this.unsubscribe(event, listenerToRemove);
+    }
+
     removeAllListeners() {
         this.events = {};
     }
 
     emit(event, data) {
-        if (!this.events[event]) return;
+        if (!this.events?.[event]) return;
         this.events[event].forEach((listener) => listener(data));
     }
 }

@@ -7,7 +7,15 @@ class SearchResults extends EventEmitter {
         this.results = [];
         this.updateResults = this.updateResults.bind(this);
         this.unsubscribeFromSearchManager = this.searchManager
-            .on('resultsChange', this.updateResults);
+            .subscribe('resultsChange', this.updateResults);
+    }
+
+    subscribe(cb) {
+        if (!this.events['resultsChange']) {
+            this.events['resultsChange'] = [];
+        }
+        this.events['resultsChange'].push(cb);
+        return () => this.unsubscribe('resultsChange', cb);
     }
 
     updateResults(results) {

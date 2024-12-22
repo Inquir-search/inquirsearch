@@ -1,7 +1,8 @@
-import { SearchManager, SearchBox, SearchResults } from '@inquir/inquirsearch';
+import { SearchManager, SearchBox, SearchResults, MessagesManager } from '@inquir/inquirsearch';
+import { marked } from 'marked';
 
-const apiKey = '9201f1f4-xxxxx-b5693f9178a2ffee3b';
-const searchManager = new SearchManager({ apiKey, indexName: 'rnm2-1718548774993' });
+const apiKey = '';
+const searchManager = new SearchManager({ apiKey, indexName: '' });
 
 const searchBox = new SearchBox(searchManager);
 const searchResults = new SearchResults(searchManager);
@@ -30,4 +31,31 @@ searchResults.subscribe((newResults) => {
 
 searchManager.subscribe('error', (error) => {
     console.error('Search encountered an error:', error);
+});
+
+const messagesManager = new MessagesManager({ apiKey });
+
+const questionInputElement = document.getElementById('question-input');
+const sendQuestionButton = document.getElementById('send-question');
+const messagesContainer = document.getElementById('messages-container');
+
+sendQuestionButton.addEventListener('click', async () => {
+    const question = questionInputElement.value;
+    if (question) {
+        await messagesManager.sendMessage({
+            "indexName": "",
+            "query": question
+        });
+        questionInputElement.value = '';
+    }
+});
+
+messagesManager.messages.subscribe((messages) => {
+    messagesContainer.innerHTML = '';
+    messages.forEach((message) => {
+        const messageItem = document.createElement('div');
+        messageItem.className = 'message-bubble';
+        messageItem.innerHTML = marked(message.message); // Convert markdown to HTML
+        messagesContainer.appendChild(messageItem);
+    });
 });

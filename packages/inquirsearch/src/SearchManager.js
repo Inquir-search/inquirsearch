@@ -98,7 +98,7 @@ class SearchManager extends EventEmitter {
                 return response.json();
             }).then((data) => {
                 this.setState({ results: data.result.results || [], loading: false });
-                this.notify('resultsChange', this.state.results);
+                this.notify('resultsChange', data.result.results || []);
                 this.notify('loading', false); // Notify listeners that loading is complete
             }).catch((error) => {
                 console.error('Search error:', error);

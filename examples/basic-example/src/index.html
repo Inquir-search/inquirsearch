@@ -5,11 +5,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #results-container, #messages-container {
+            margin-top: 20px;
+        }
+        .message-bubble {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 
 <body>
     <input type="text" id="search-input" placeholder="Type to search..." />
     <div id="results-container"></div>
+    
+    <input type="text" id="question-input" placeholder="Ask a question..." />
+    <button id="send-question">Send</button>
+    <div id="messages-container"></div>
 </body>
 
 </html>

@@ -8,13 +8,19 @@ class SearchBox extends EventEmitter {
     }
 
     setQuery(query) {
-        this.query = query;
-        this.searchManager.updateQueryParams({ query });
-        this.emit('queryChange', this.query);
+        if (this.query !== query) { // Add condition to prevent infinite loop
+            this.query = query;
+            this.searchManager.updateQueryParams({ query });
+            this.emit('queryChange', this.query);
+        }
     }
 
     subscribe(listener) {
-        return this.on('queryChange', listener);
+        if (!this.events['queryChange']) {
+            this.events['queryChange'] = [];
+        }
+        this.events['queryChange'].push(listener);
+        return () => this.unsubscribe('queryChange', listener);
     }
 
     getQuery() {

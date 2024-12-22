@@ -1,5 +1,5 @@
 export default class Subject {
-    construcror(initialValue) {
+    constructor(initialValue) {
         this.value = initialValue;
         this.subscriptions = [];
     }
