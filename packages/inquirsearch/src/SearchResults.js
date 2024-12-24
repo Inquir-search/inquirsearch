@@ -10,12 +10,16 @@ class SearchResults extends EventEmitter {
             .subscribe('resultsChange', this.updateResults);
     }
 
-    subscribe(cb) {
-        if (!this.events['resultsChange']) {
-            this.events['resultsChange'] = [];
+    subscribe(event, cb) {
+        if (typeof event === 'function') {
+            cb = event;
+            event = 'resultsChange';
         }
-        this.events['resultsChange'].push(cb);
-        return () => this.unsubscribe('resultsChange', cb);
+        if (!this.events[event]) {
+            this.events[event] = [];
+        }
+        this.events[event].push(cb);
+        return () => this.unsubscribe(event, cb);
     }
 
     updateResults(results) {

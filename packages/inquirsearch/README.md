@@ -1,215 +1,150 @@
 # Inquir Search Library
 
-Check out Inquir: https://inquir.org/
-
-## Table of Contents
-- [Inquir Search Library](#inquir-search-library)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-    - [Core Components](#core-components)
-  - [Installation](#installation)
-  - [Getting Started](#getting-started)
-    - [1. SearchManager](#1-searchmanager)
-    - [2. SearchBox](#2-searchbox)
-    - [3. SearchResults](#3-searchresults)
-    - [4. SSEClient](#4-sseclient)
-    - [5. MessagesManager](#5-messagesmanager)
-  - [Debounce Support](#debounce-support)
-  - [Usage Example](#usage-example)
-  - [API Documentation](#api-documentation)
-    - [SearchManager](#searchmanager)
-    - [SearchBox](#searchbox)
-    - [SearchResults](#searchresults)
-  - [SSEClient](#sseclient)
-  - [MessagesManager](#messagesmanager)
-  - [Contributing](#contributing)
-  - [License](#license)
-
----
-
-## Introduction
-
-The **Inquir Search Library** is a flexible, framework-agnostic JavaScript library designed to provide search functionality in your applications. It allows interaction with a backend search API, managing search state and handling user inputs through **headless components**. These components focus solely on state management, making them easy to integrate with any front-end framework or plain JavaScript.
-
-### Core Components
-
-- **SearchManager**: Manages search queries, executes API requests, and handles search results.
-- **SearchBox**: Manages the search query state and updates the SearchManager.
-- **SearchResults**: Subscribes to search results from the SearchManager and manages local state.
-
----
+A framework-agnostic JavaScript library for building search interfaces with real-time messaging capabilities.
 
 ## Installation
 
-To install the library, use the following command for npm:
+```bash
+npm install @inquir/inquirsearch
+```
 
-Run the `npm install` command followed by `@inquir/inquirsearch`.
+## Basic Usage
 
----
+```javascript
+import { SearchManager, SearchBox, SearchResults, MessagesManager } from '@inquir/inquirsearch';
 
-## Getting Started
+// Initialize components
+const searchManager = new SearchManager({ 
+  apiKey: process.env.API_KEY,
+  indexName: process.env.INDEX_NAME 
+});
 
-### 1. SearchManager
+const searchBox = new SearchBox(searchManager);
+const searchResults = new SearchResults(searchManager);
+const messagesManager = new MessagesManager({
+  baseUrl: "http://localhost:8000",
+  apiKey: process.env.API_KEY
+});
 
-The **SearchManager** is the core component responsible for managing the search state, constructing query objects based on your API schema, executing search requests, and notifying subscribers about state changes.
+// Handle search
+searchBox.subscribe(query => {
+  console.log('Query updated:', query);
+});
 
-To instantiate the **SearchManager**, pass an API key to the constructor. This key is used in the Authorization header for API requests.
+searchResults.subscribe(results => {
+  console.log('New results:', results);
+});
 
-The **SearchManager** provides several key methods:
-- `updateQueryParams`: This method updates the search parameters based on the provided object.
-- `executeSearch`: Executes the search request based on the current state and notifies subscribers about the results.
-- `subscribe`: Subscribes to specific events like `resultsChange` or `error`.
+// Handle messages
+messagesManager.on('update', state => {
+  const messages = Array.from(state.messages.values());
+  console.log('Messages updated:', messages);
+});
 
-The **SearchManager** uses an internal event emitter to manage subscriptions and notifications.
+// Error handling
+searchManager.subscribe('error', error => {
+  console.error('Search error:', error);
+});
+```
 
----
+## Features
 
-### 2. SearchBox
+- 🔍 Framework-agnostic search components
+- ⚡ Real-time updates via SSE
+- 🔒 Secure API authentication
+- 📝 Markdown message support
+- ⏱️ Built-in debouncing
 
-The **SearchBox** component manages the search query state and interacts with the **SearchManager** to update the query parameters and trigger searches.
-
-When instantiating **SearchBox**, pass in the **SearchManager** instance.
-
-Key methods of **SearchBox** include:
-- `setQuery`: Sets the search query and triggers a search.
-- `subscribe`: Subscribes to query changes, allowing a listener function to respond whenever the query changes.
-- `getQuery`: Retrieves the current search query.
-
-Each **SearchBox** instance uses an event emitter to notify subscribers about query changes.
-
----
-
-### 3. SearchResults
-
-The **SearchResults** component subscribes to search results from the **SearchManager** and maintains its own local state for the results.
-
-When instantiating **SearchResults**, pass in the **SearchManager** instance.
-
-Key methods of **SearchResults** include:
-- `subscribe`: Subscribes to search result changes, allowing a listener function to respond whenever new results are available.
-- `getResults`: Retrieves the current search results.
-- `destroy`: Cleans up subscriptions when the component is no longer needed.
-
-Each **SearchResults** instance uses an event emitter to notify subscribers about updates to the results.
-
----
-
-### 4. SSEClient
-
-The **SSEClient** class handles Server-Sent Events (SSE) with explicit event names. It emits events based on the backend's `event:` declarations and supports POST requests with a body.
-
-Key methods of **SSEClient** include:
-- `fetchDataSSE`: Fetches SSE data from the server and emits events based on the backend's `event:` declarations. Falls back to 'message' for lines without `event:`.
-
-### 5. MessagesManager
-
-The **MessagesManager** class manages messages and history using the **SSEClient** for real-time updates.
-
-Key methods of **MessagesManager** include:
-- `sendMessage`: Sends a message to the server and updates the history.
-- `subscribe`: Subscribes to specific events like `message`, `history`, or `error`.
-- `unsubscribe`: Unsubscribes from specific events.
-- `getMessages`: Retrieves the current messages.
-- `clearMessages`: Clears all messages.
-
----
-
-## Debounce Support
-
-To prevent excessive API calls during rapid user input, the **SearchManager** includes a debounce mechanism in the `executeSearch` method. This ensures that searches are only executed after a set delay since the last invocation.
-
-There are two approaches for implementing debounce:
-
-- **Manual Debounce**: The `executeSearch` method is debounced using a `setTimeout` and `clearTimeout` mechanism.
-- **Using Lodash**: For a more robust solution, **lodash.debounce** can be used to debounce the search execution.
-
-To use **lodash**, first install it and update the **SearchManager** to use **lodash.debounce**.
-
----
-
-## Usage Example
-
-Here’s an example of how to use the **Inquir Search Library** to integrate search functionality into a web application:
-
-1. Create a basic HTML structure with a search input field and a results container.
-2. Instantiate **SearchManager**, **SearchBox**, and **SearchResults**.
-3. Listen for user input changes on the search input field, and pass the query to **SearchBox** to trigger a search.
-4. Subscribe to **SearchResults** to update the results container when new search results are available.
-
-When a user types into the search input, **SearchBox** will update the query in **SearchManager**, which will execute a debounced search and notify **SearchResults** of the updated results.
-
----
-
-## API Documentation
+## Core Components
 
 ### SearchManager
+- Handles API communication
+- Manages search state
+- Emits search events
 
-The **SearchManager** constructor requires an API key for authenticating API requests.
+### SearchBox
+- Manages search input
+- Debounces queries
+- Updates search state
 
-Key methods:
-- `updateQueryParams`: Updates the search parameters, such as query, size, and page, using the provided object.
-- `executeSearch`: Executes the search based on the current state and notifies listeners when results are available.
-- `subscribe`: Subscribes to events like `resultsChange` or `error` and accepts a listener function that responds to updates.
+### SearchResults
+- Subscribes to search updates
+- Maintains results state
 
----
+### MessagesManager
+- Handles real-time messaging
+- Supports markdown formatting
+- Manages message history
+
+## Complete Example
+
+```javascript
+import { SearchManager, SearchBox, SearchResults, MessagesManager } from '@inquir/inquirsearch';
+
+// Initialize components
+const searchManager = new SearchManager({ 
+  apiKey: process.env.API_KEY,
+  indexName: process.env.INDEX_NAME 
+});
+
+const searchBox = new SearchBox(searchManager);
+const searchResults = new SearchResults(searchManager);
+const messagesManager = new MessagesManager({
+  baseUrl: "http://localhost:8000",
+  apiKey: process.env.API_KEY
+});
+
+// Handle search
+searchBox.subscribe(query => {
+  console.log('Query updated:', query);
+});
+
+searchResults.subscribe(results => {
+  console.log('New results:', results);
+});
+
+// Handle messages
+messagesManager.on('update', state => {
+  const messages = Array.from(state.messages.values());
+  console.log('Messages updated:', messages);
+});
+
+// Error handling
+searchManager.subscribe('error', error => {
+  console.error('Search error:', error);
+});
+```
+
+## API Reference
+### SearchManager
+
+```typescript
+interface SearchManagerConfig {
+  apiKey: string;
+  indexName: string;
+}
+
+new SearchManager(config: SearchManagerConfig)
+```
 
 ### SearchBox
 
-The **SearchBox** constructor requires an instance of **SearchManager**.
+```typescript
+new SearchBox(searchManager: SearchManager)
+```
 
-Key methods:
-- `setQuery`: Sets the search query and updates the **SearchManager**.
-- `getQuery`: Retrieves the current search query.
-- `subscribe`: Subscribes to query changes with a listener function that reacts to query updates.
-
----
+Methods:
+- setQuery(query: string): void
+- subscribe(callback: (query: string) => void): void
+- getQuery(): string
 
 ### SearchResults
-
-The **SearchResults** constructor requires an instance of **SearchManager**.
-
-Key methods:
-- `subscribe`: Subscribes to updates in search results using a listener function.
-- `getResults`: Retrieves the current search results.
-- `destroy`: Cleans up subscriptions when the component is no longer needed.
-
----
-
-## SSEClient
-
-The **SSEClient** constructor does not require any parameters.
-
-Key methods:
-- `fetchDataSSE`: Fetches SSE data from the server and emits events based on the backend's `event:` declarations. Falls back to 'message' for lines without `event:`.
-
----
-
-## MessagesManager
-
-The **MessagesManager** constructor requires a `baseUrl` and a `token` for authenticating API requests.
-
-Key methods:
-- `sendMessage`: Sends a message to the server and updates the history.
-- `subscribe`: Subscribes to specific events like `message`, `history`, or `error`.
-- `unsubscribe`: Unsubscribes from specific events.
-- `getMessages`: Retrieves the current messages.
-- `clearMessages`: Clears all messages.
-
----
-
+### MessagesManager
 ## Contributing
-
-We welcome contributions to the **Inquir Search Library**. Follow these steps to contribute:
-
-1. Fork the repository.
-2. Clone your forked repository to your local machine.
-3. Create a new branch for your feature or bug fix.
-4. Make the necessary changes and commit them.
-5. Push your changes to your forked repository.
-6. Open a pull request with a detailed description of the changes.
-
----
-
+- Fork the repository
+- Create a feature branch (git checkout -b feature/amazing-feature)
+- Commit changes (git commit -m 'Add amazing feature')
+- Push to branch (git push origin feature/amazing-feature)
+- Open a Pull Request
 ## License
-
-The **Inquir Search Library** is licensed under the MIT License.
+MIT License

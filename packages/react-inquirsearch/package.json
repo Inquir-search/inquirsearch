@@ -33,5 +33,9 @@
     "dist",
     "src"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^15.0.4",
+    "prismjs": "^1.29.0"
+  }
 }

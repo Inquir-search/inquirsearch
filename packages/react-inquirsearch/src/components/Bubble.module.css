@@ -1,0 +1,185 @@
+.bubble {
+  --user-bg: #007AFF;
+  --bot-bg: #f0f0f0;
+  --user-text: #ffffff;
+  --bot-text: #1a1a1a;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  padding: 0.5rem;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+  gap: 0.25rem;
+}
+
+.bubble :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, pre, blockquote) {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
+.bubble :where(ul, ol) {
+    padding-left: 0.25rem;
+}
+
+.bubble :where(li) {
+    margin: 0.125rem 0;
+}
+
+.bubble :where(p + p, ul + p, ol + p, p + ul, p + ol) {
+    margin-top: 0.25rem;
+}
+
+.bubble :where(h1, h2, h3, h4, h5, h6) {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.bubble :where(pre) {
+    margin: 0.25rem 0;
+}
+
+.bubble :where(blockquote) {
+    margin: 0.25rem 0;
+    padding-left: 0.5rem;
+}
+
+.userBubble {
+  margin-left: auto;
+  background-color: var(--user-bg);
+  color: var(--user-text);
+  border-radius: 1rem 1rem 0 1rem;
+}
+
+.botBubble {
+  margin-right: auto;
+  background-color: var(--bot-bg);
+  color: var(--bot-text);
+  border-radius: 1rem 1rem 1rem 0;
+}
+
+.message {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.tail {
+  position: absolute;
+  bottom: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.userBubble .tail {
+  right: -0.75rem;
+  clip-path: polygon(0 0, 0% 100%, 100% 100%);
+  background-color: var(--user-bg);
+}
+
+.botBubble .tail {
+  left: -0.75rem;
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+  background-color: var(--bot-bg);
+}
+
+.textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.timestamp {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 0.125rem;
+  user-select: none;
+}
+
+.status {
+  margin-left: 0.125rem;
+  font-size: 0.7rem;
+}
+
+.codeBlock {
+  position: relative;
+  background: #1e1e1e;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.copyButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 0.25rem;
+  color: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copyButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .bubble {
+    --bot-bg: #2c2c2c;
+    --bot-text: #ffffff;
+  }
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    max-width: 80%;
+  }
+}
+
+.bubble pre {
+    background: #1e1e1e;
+    padding: 0.5rem;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    margin: 0.25rem 0;
+}
+
+.bubble pre::after {
+    content: 'Click to copy';
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    color: #666;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.bubble pre:hover::after {
+    opacity: 1;
+}
+
+.bubble code {
+    font-family: 'Consolas', monospace;
+    font-size: 0.9em;
+    padding: 0;
+    margin: 0;
+}

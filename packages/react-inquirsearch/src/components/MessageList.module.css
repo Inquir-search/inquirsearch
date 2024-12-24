@@ -1,0 +1,39 @@
+.scrollContainer {
+    flex: 1;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    position: relative;
+}
+
+.messageList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.typingIndicator {
+    display: flex;
+    gap: 4px;
+    padding: 12px;
+    margin: 8px;
+    width: fit-content;
+}
+
+.typingIndicator span {
+    width: 8px;
+    height: 8px;
+    background: #007AFF;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.typingIndicator span:nth-child(2) { animation-delay: 0.2s; }
+.typingIndicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+}

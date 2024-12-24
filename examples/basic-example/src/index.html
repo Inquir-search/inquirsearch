@@ -13,12 +13,28 @@
             margin-top: 20px;
         }
         .message-bubble {
-            background-color: #f1f1f1;
             border-radius: 10px;
             padding: 10px;
             margin-bottom: 10px;
             max-width: 80%;
             word-wrap: break-word;
+        }
+        .message-bubble.user {
+            background-color: #d1e7dd;
+            align-self: flex-end;
+        }
+        .message-bubble.bot {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+        }
+        #loading-indicator {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #messages-container {
+            display: flex;
+            flex-direction: column;
         }
     </style>
 </head>
@@ -30,6 +46,8 @@
     <input type="text" id="question-input" placeholder="Ask a question..." />
     <button id="send-question">Send</button>
     <div id="messages-container"></div>
+
+    <div id="loading-indicator">Loading...</div> <!-- Added loading indicator -->
 </body>
 
 </html>
