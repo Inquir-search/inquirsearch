@@ -1,17 +1,30 @@
 import './App.css';
 import '@inquir/react-inquirsearch/dist/main.css';
-import { SearchProvider, SearchBox, SearchResults, SearchModal } from '@inquir/react-inquirsearch';
+import { SearchProvider, SearchModal, ChatContainer } from '@inquir/react-inquirsearch';
+
+const API_KEY = ""
+const INDEX_NAME = ""
 
 function App() {
   return (
-    <SearchProvider
-      indexName="inquir-test-1730287128584"
-      apiKey="9201f1f4-xxxxx-b5693f9178a2ffee3b"
-      debounce={250}
-      size={20}
-    >
-      <SearchModal />
-    </SearchProvider>
+    <div className="app">
+      <SearchProvider
+        indexName={INDEX_NAME}
+        apiKey={API_KEY}
+        debounce={250}
+        size={20}
+      >
+        <div className="chat-container">
+          <ChatContainer
+            baseUrl="http://localhost:8000"
+            apiKey={API_KEY}
+            indexName={INDEX_NAME}
+            onError={(error) => console.error('Chat error:', error)}
+          />
+        </div>
+        <SearchModal />
+      </SearchProvider>
+    </div>
   );
 }
 

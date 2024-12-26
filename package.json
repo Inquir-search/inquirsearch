@@ -24,6 +24,7 @@
   "scripts": {
     "start": "npm run start --workspace=examples/basic-example",
     "build:search": "npm run build --workspace=packages/inquirsearch",
+    "build:react": "npm run build --workspace=packages/react-inquirsearch",
     "build:example": "npm run build --workspace=examples/basic-example"
   },
   "version": "1.0.0",
@@ -32,8 +33,9 @@
     "example": "examples",
     "test": "tests"
   },
-  "dependencies": {},
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+  }
 }

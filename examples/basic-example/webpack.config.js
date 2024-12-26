@@ -1,5 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
 
 module.exports = {
     devtool: 'inline-source-map',
@@ -48,6 +53,10 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/index.html', // Use a template from src
+        }),
+        new webpack.DefinePlugin({
+            'process.env.API_KEY': JSON.stringify(process.env.API_KEY),
+            'process.env.INDEX_NAME': JSON.stringify(process.env.INDEX_NAME),
         }),
     ],
 };

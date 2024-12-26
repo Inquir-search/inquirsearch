@@ -7,5 +7,5 @@ module.exports = {
             '@inquir/inquirsearch': path.resolve(__dirname, '../../packages/inquirsearch/dist'),
             '@inquir/react-inquirsearch': path.resolve(__dirname, '../../packages/react-inquirsearch/dist'),
         },
-    }
+    },
 };
