@@ -1,6 +1,6 @@
 # Inquir Search Library
 
-Check out Inquir: https://inquir.org/
+Headless search and chat components for integrating with Inquir platform.
 
 ## Table of Contents
 - [Inquir Search Library](#inquir-search-library)
@@ -10,16 +10,24 @@ Check out Inquir: https://inquir.org/
   - [Installation](#installation)
   - [Getting Started](#getting-started)
     - [1. SearchManager](#1-searchmanager)
+      - [SearchManager Configuration](#searchmanager-configuration)
     - [2. SearchBox](#2-searchbox)
     - [3. SearchResults](#3-searchresults)
   - [Debounce Support](#debounce-support)
   - [Usage Example](#usage-example)
+  - [Usage Examples](#usage-examples)
+    - [Basic JavaScript Example](#basic-javascript-example)
+    - [React Example](#react-example)
   - [API Documentation](#api-documentation)
     - [SearchManager](#searchmanager)
     - [SearchBox](#searchbox)
     - [SearchResults](#searchresults)
+    - [MessagesManager](#messagesmanager)
+      - [MessagesManager Configuration](#messagesmanager-configuration)
   - [Contributing](#contributing)
+  - [Running locally](#running-locally)
   - [License](#license)
+  - [Default Configuration](#default-configuration)
 
 ---
 
@@ -37,11 +45,9 @@ The **Inquir Search Library** is a flexible, framework-agnostic JavaScript libra
 
 ## Installation
 
-To install the library, use the following command for npm:
-
-Run the `npm install` command followed by `@inquir/inquirsearch`.
-
-Alternatively, if using yarn, run the `yarn add` command followed by `@inquir/inquirsearch`.
+```bash
+npm install @inquir/inquirsearch
+```
 
 ---
 
@@ -60,6 +66,41 @@ The **SearchManager** provides several key methods:
 
 The **SearchManager** uses an internal event emitter to manage subscriptions and notifications.
 
+#### SearchManager Configuration
+
+The **SearchManager** can be configured using the following interface:
+
+```typescript
+interface SearchManagerConfig {
+  baseUrl?: string;
+  apiKey: string;
+  indexName: string;
+  debounce?: number;
+  cacheTTL?: number;
+  maxRetries?: number;
+  state?: Partial<SearchState>;
+}
+```
+
+Example instantiation:
+
+```javascript
+const searchManager = new SearchManager({
+  apiKey: 'your-api-key',
+  indexName: 'your-index'
+});
+```
+
+Key methods:
+- `updateQuery(query: string): void`: Updates the search query.
+- `updateQueryParams(params: object): void`: Updates the search parameters based on the provided object.
+- `executeSearch(): Promise<void>`: Executes the search request based on the current state and notifies subscribers about the results.
+
+Key events:
+- `on('queryChange', (query) => {})`: Subscribes to query changes.
+- `on('resultsChange', (results) => {})`: Subscribes to results changes.
+- `on('error', (error) => {})`: Subscribes to error events.
+
 ---
 
 ### 2. SearchBox
@@ -75,6 +116,17 @@ Key methods of **SearchBox** include:
 
 Each **SearchBox** instance uses an event emitter to notify subscribers about query changes.
 
+Example instantiation:
+
+```javascript
+const searchBox = new SearchBox(searchManager);
+```
+
+Key methods:
+- `setQuery(query: string): void`: Sets the search query and triggers a search.
+- `getQuery(): string`: Retrieves the current search query.
+- `subscribe((query: string) => void): () => void`: Subscribes to query changes, allowing a listener function to respond whenever the query changes.
+
 ---
 
 ### 3. SearchResults
@@ -89,6 +141,19 @@ Key methods of **SearchResults** include:
 - `destroy`: Cleans up subscriptions when the component is no longer needed.
 
 Each **SearchResults** instance uses an event emitter to notify subscribers about updates to the results.
+
+Example instantiation:
+
+```javascript
+const searchResults = new SearchResults(searchManager);
+```
+
+// Methods
+```typescript
+searchResults.subscribe('resultsChange', (results: any[]) => void): () => void
+searchResults.getResults(): any[]
+searchResults.destroy(): void
+```
 
 ---
 
@@ -115,6 +180,77 @@ Here’s an example of how to use the **Inquir Search Library** to integrate sea
 4. Subscribe to **SearchResults** to update the results container when new search results are available.
 
 When a user types into the search input, **SearchBox** will update the query in **SearchManager**, which will execute a debounced search and notify **SearchResults** of the updated results.
+
+---
+
+## Usage Examples
+
+### Basic JavaScript Example
+```javascript
+import { SearchManager, SearchBox, SearchResults, MessagesManager } from '@inquir/inquirsearch';
+
+// Initialize search
+const searchManager = new SearchManager({
+  apiKey: 'your-api-key',
+  indexName: 'your-index',
+  debounce: 250
+});
+
+const searchBox = new SearchBox(searchManager);
+const searchResults = new SearchResults(searchManager);
+
+// Handle search results
+searchResults.subscribe('resultsChange', (results) => {
+  console.log('New results:', results);
+});
+
+// Initialize chat
+const messagesManager = new MessagesManager({
+  baseUrl: 'http://localhost:8000',
+  apiKey: 'your-api-key'
+});
+
+// Send message
+await messagesManager.sendMessage({
+  indexName: 'your-index',
+  query: 'your question'
+});
+
+// Handle responses
+messagesManager.on('update', (state) => {
+  console.log('New messages:', state.messages);
+});
+```
+
+### React Example
+```javascript
+import { SearchProvider, SearchModal, ChatContainer } from '@inquir/react-inquirsearch';
+import '@inquir/react-inquirsearch/dist/main.css';
+
+function App() {
+  return (
+    <div className="app">
+      <SearchProvider
+        indexName="your-index-name"
+        apiKey="your-api-key"
+        debounce={250}
+        size={20}
+      >
+        {/* Chat Interface */}
+        <ChatContainer
+          baseUrl="http://localhost:8000"
+          apiKey="your-api-key"
+          indexName="your-index-name"
+          onError={(error) => console.error('Chat error:', error)}
+        />
+        
+        {/* Search Modal */}
+        <SearchModal />
+      </SearchProvider>
+    </div>
+  );
+}
+```
 
 ---
 
@@ -153,6 +289,40 @@ Key methods:
 
 ---
 
+### MessagesManager
+
+The **MessagesManager** constructor requires an API key for authenticating API requests.
+
+#### MessagesManager Configuration
+
+The **MessagesManager** can be configured using the following interface:
+
+```typescript
+interface MessagesConfig {
+  baseUrl?: string;
+  apiKey: string;
+}
+```
+
+Example instantiation:
+
+```javascript
+const messagesManager = new MessagesManager({
+  apiKey: 'your-api-key'
+});
+```
+
+Key methods:
+- `sendMessage(body: object): Promise<void>`: Sends a message to the server.
+- `addMessage(message: string, sender?: "user"|"bot"): void`: Adds a message to the local state.
+- `clearMessages(): void`: Clears all messages from the local state.
+
+Key events:
+- `on('update', (state) => {})`: Subscribes to updates in the message state.
+- `on('error', (error) => {})`: Subscribes to error events.
+
+---
+
 ## Contributing
 
 We welcome contributions to the **Inquir Search Library**. Follow these steps to contribute:
@@ -166,6 +336,38 @@ We welcome contributions to the **Inquir Search Library**. Follow these steps to
 
 ---
 
+## Running locally
+
+1. install dependencies
+```bash
+npm install
+```
+
+2. Run example (basic)
+```bash
+npm run start:basic
+```
+
+3. Run example (react)
+```bash
+npm run start:react
+```
+
 ## License
 
 The **Inquir Search Library** is licensed under the MIT License.
+
+---
+
+## Default Configuration
+
+The **Inquir Search Library** provides a default configuration interface:
+
+```typescript
+interface DefaultConfig {
+  BASE_URL: string;      // Default: 'https://platform.inquir.org'
+  DEBOUNCE: number;      // Default: 250ms
+  CACHE_TTL: number;     // Default: 300000ms (5min)
+  MAX_RETRIES: number;   // Default: 3
+}
+```

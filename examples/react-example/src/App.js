@@ -22,7 +22,7 @@ function App() {
             onError={(error) => console.error('Chat error:', error)}
           />
         </div>
-        <SearchModal />
+        {/* <SearchModal /> */}
       </SearchProvider>
     </div>
   );

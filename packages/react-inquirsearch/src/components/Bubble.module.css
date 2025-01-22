@@ -21,11 +21,22 @@
 }
 
 .bubble :where(ul, ol) {
-    padding-left: 0.25rem;
+    padding-left: 1rem;
+    margin-left: 0;
 }
 
 .bubble :where(li) {
-    margin: 0.125rem 0;
+    /* text-indent: -1em; */
+    /* padding-left: 1em; */
+    margin: 0;
+}
+
+.bubble :where(li + li) {
+    margin-top: 0.125rem;
+}
+
+.bubble :where(ul ul, ol ol, ul ol, ol ul) {
+    margin-left: 1em;
 }
 
 .bubble :where(p + p, ul + p, ol + p, p + ul, p + ol) {
@@ -61,7 +72,6 @@
 }
 
 .message {
-  white-space: pre-wrap;
   word-break: break-word;
   line-height: 1.4;
 }
