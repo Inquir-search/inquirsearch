@@ -22,10 +22,13 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "start": "npm run start --workspace=examples/basic-example",
+    "start:basic": "npm run start --workspace=examples/basic-example",
+    "start:react": "npm run start --workspace=examples/react-example",
+    "build": "npm run build:search && npm run build:react",
     "build:search": "npm run build --workspace=packages/inquirsearch",
     "build:react": "npm run build --workspace=packages/react-inquirsearch",
-    "build:example": "npm run build --workspace=examples/basic-example"
+    "build:example": "npm run build --workspace=examples/basic-example",
+    "postinstall": "npm run build"
   },
   "version": "1.0.0",
   "main": "jest.config.js",

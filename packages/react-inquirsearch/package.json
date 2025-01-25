@@ -1,12 +1,20 @@
 {
   "name": "@inquir/react-inquirsearch",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "React components for Inquir Search",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
+  "types": "dist/types/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
   "scripts": {
-    "build": "webpack --mode production",
+    "pub": "npm publish --access public",
+    "clean": "rimraf dist",
+    "build": "webpack --mode production && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir ./dist/types",
     "start": "webpack --mode development --watch",
+    "watch:types": "tsc --watch --emitDeclarationOnly",
     "lint": "eslint src",
     "prepublishOnly": "npm run build"
   },
@@ -18,6 +26,9 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
+    "@babel/preset-typescript": "^7.26.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "babel-loader": "^9.2.1",
     "css-loader": "^7.1.2",
     "eslint": "^7.32.0",
@@ -25,7 +36,9 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.2",
     "mini-css-extract-plugin": "^2.9.1",
+    "rimraf": "^5.0.10",
     "style-loader": "^4.0.0",
+    "typescript": "^5.7.3",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4"
   },
@@ -36,6 +49,7 @@
   "license": "MIT",
   "dependencies": {
     "marked": "^15.0.4",
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.29.0",
+    "react-rnd": "^10.4.14"
   }
 }

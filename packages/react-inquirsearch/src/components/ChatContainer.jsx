@@ -1,22 +1,18 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { marked } from 'marked';
-import { MessagesManager } from '@inquir/inquirsearch';
+import { useMessagesManager } from '../context/SearchProvider';
 import PropTypes from 'prop-types';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 import * as styles from './ChatContainer.module.css';
 
-const ChatContainer = ({
-    apiKey,
-    baseUrl = 'https://platform.inquir.org',
+export default function ChatContainer({
     indexName,
     onError,
     initialMessages = []
-}) => {
-    const [messages, setMessages] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+}) {
     const [error, setError] = useState(null);
-    const [manager, setManager] = useState(null);
+    const { manager, state } = useMessagesManager();
     const messagesWrapperRef = useRef(null);
     const isInitialized = useRef(false);
 
@@ -29,44 +25,17 @@ const ChatContainer = ({
         }
     }, [manager, initialMessages]);
 
-    const handleStateUpdate = useCallback((state) => {
-        console.log('State updated:', state);
-        const messagesList = Array.from(state.messages.values());
-        messagesList.forEach((message) => {
-            console.log('Message:', message);
-        });
-        setMessages(messagesList);
-        setIsLoading(state.loading);
-    }, []);
-
     const handleError = useCallback((err) => {
         setError(err);
         onError?.(err);
-        setIsLoading(false);
     }, [onError]);
 
     useEffect(() => {
-        try {
-            const messagesManager = new MessagesManager({
-                baseUrl,
-                apiKey
-            });
-
-            messagesManager.on('update', handleStateUpdate);
-            messagesManager.on('error', handleError);
-            messagesManager.on('loading', setIsLoading);
-
-            setManager(messagesManager);
-
-            return () => {
-                messagesManager.off('update', handleStateUpdate);
-                messagesManager.off('error', handleError);
-                messagesManager.off('loading', setIsLoading);
-            };
-        } catch (err) {
-            handleError(err);
-        }
-    }, [apiKey, baseUrl, handleStateUpdate, handleError]);
+        manager.on('error', handleError);
+        return () => {
+            manager.off('error', handleError);
+        };
+    }, [manager, handleError]);
 
     const handleSendMessage = async (message) => {
         if (!manager) return;
@@ -89,12 +58,12 @@ const ChatContainer = ({
         if (messagesWrapperRef.current) {
             const wrapper = messagesWrapperRef.current;
             const distanceFromBottom = wrapper.scrollHeight - wrapper.scrollTop - wrapper.clientHeight;
-            
+
             if (distanceFromBottom < 100) {
                 wrapper.scrollTop = wrapper.scrollHeight;
             }
         }
-    }, [messages]);
+    }, [manager?.messages]);
 
     if (!manager) {
         return <div className={styles.loading}>Initializing chat...</div>;
@@ -104,8 +73,8 @@ const ChatContainer = ({
         <div className={styles.container}>
             <div className={styles.messagesWrapper} ref={messagesWrapperRef}>
                 <MessageList
-                    messages={messages}
-                    isLoading={isLoading}
+                    messages={manager.messages}
+                    isLoading={state.loading}
                     renderMessage={renderMessage}
                 />
             </div>
@@ -116,15 +85,13 @@ const ChatContainer = ({
             )}
             <MessageInput
                 onSend={handleSendMessage}
-                disabled={isLoading}
+                disabled={state.loading}
             />
         </div>
     );
-};
+}
 
 ChatContainer.propTypes = {
-    apiKey: PropTypes.string.isRequired,
-    baseUrl: PropTypes.string,
     indexName: PropTypes.string.isRequired,
     onError: PropTypes.func,
     initialMessages: PropTypes.arrayOf(PropTypes.shape({
@@ -132,5 +99,3 @@ ChatContainer.propTypes = {
         sender: PropTypes.oneOf(['user', 'bot']).isRequired
     }))
 };
-
-export default ChatContainer;

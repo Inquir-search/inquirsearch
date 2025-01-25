@@ -1,5 +1,27 @@
 import EventEmitter from './EventEmitter.js';
 
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY = 1000;
+
+async function retryFetch(url, options, attempt = 1) {
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response;
+    } catch (error) {
+        if (attempt >= MAX_RETRIES) {
+            throw new Error(`Failed after ${MAX_RETRIES} attempts: ${error.message}`);
+        }
+        
+        const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt - 1);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        return retryFetch(url, options, attempt + 1);
+    }
+}
+
 /**
  * SSEClient
  * ----------
@@ -28,7 +50,7 @@ export class SSEClient extends EventEmitter {
     async fetchDataSSE(url, options = { method: 'POST' }) {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch(url, options);
+                const response = await retryFetch(url, options);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }

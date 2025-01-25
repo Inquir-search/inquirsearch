@@ -4,24 +4,30 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     mode: 'development', // Switch to 'production' when deploying for production
     devtool: 'eval-source-map', // Use 'source-map' for production
-    entry: './src/index.js', // Main entry point for your application
+    entry: './src/index.ts', // Main entry point for your application
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
         library: 'ReactInquirSearch',
         libraryTarget: 'umd',
         globalObject: 'this',
-        clean: true, // Automatically clean the output directory before each build
+        clean: {
+            keep: /\.d\.ts$/, // Keep type definition files
+        },
     },
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(ts|tsx|js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react']
+                        presets: [
+                            '@babel/preset-env',
+                            '@babel/preset-react',
+                            '@babel/preset-typescript'
+                        ]
                     }
                 }
             },
@@ -57,7 +63,7 @@ module.exports = {
         })
     ],
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
         alias: {
             '@inquir/inquirsearch': path.resolve(__dirname, '../inquirsearch/dist/index.js') // Alias for imports
         }
