@@ -6,13 +6,17 @@ import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 import * as styles from './ChatContainer.module.css';
 
-const ChatContainer = ({
+/**
+ * TODO:
+ * Add context support
+ */
+export default function ChatContainer({
     apiKey,
     baseUrl = 'https://platform.inquir.org',
     indexName,
     onError,
     initialMessages = []
-}) => {
+}) {
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -89,7 +93,7 @@ const ChatContainer = ({
         if (messagesWrapperRef.current) {
             const wrapper = messagesWrapperRef.current;
             const distanceFromBottom = wrapper.scrollHeight - wrapper.scrollTop - wrapper.clientHeight;
-            
+
             if (distanceFromBottom < 100) {
                 wrapper.scrollTop = wrapper.scrollHeight;
             }
@@ -132,5 +136,3 @@ ChatContainer.propTypes = {
         sender: PropTypes.oneOf(['user', 'bot']).isRequired
     }))
 };
-
-export default ChatContainer;

@@ -1,3 +1,9 @@
+:root {
+  --primary-gradient: linear-gradient(135deg, #00B2FF 0%, #006AFF 100%);
+  --disabled-opacity: 0.5;
+  --transition-duration: 0.2s;
+}
+
 .inputContainer {
     display: flex;
     gap: 8px;
@@ -18,13 +24,20 @@
     padding: 0 24px;
     border: none;
     border-radius: 24px;
-    background: #007AFF;
+    background: var(--primary-gradient);
     color: white;
     font-weight: 500;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-duration) ease-in-out;
+    opacity: 1;
+    transform: scale(1);
 }
 
 .sendButton:disabled {
-    background: #ccc;
+    opacity: var(--disabled-opacity);
+    transform: scale(0.95);
     cursor: not-allowed;
 }
