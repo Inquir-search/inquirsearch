@@ -79,6 +79,7 @@ function App() {
         apiKey={API_KEY}
         debounce={250}
         size={20}
+        baseUrl="http://localhost:8000"
       >
         <RndContainer
           title="Chat"
@@ -95,8 +96,6 @@ function App() {
                 { message: "Hello", sender: "bot" }
               ]
             }
-            baseUrl="http://localhost:8000"
-            apiKey={API_KEY}
             indexName={INDEX_NAME}
             onError={(error) => console.error('Chat error:', error)}
           />

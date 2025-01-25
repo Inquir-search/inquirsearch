@@ -38,18 +38,36 @@ export default class MessagesManager extends EventEmitter {
             history: [],
             objectProperties: undefined,
         };
+        
+        // Bind all methods
+        this.setState = this.setState.bind(this);
+        this.getState = this.getState.bind(this);
+        this.initSubscriptions = this.initSubscriptions.bind(this);
+        this.addMessage = this.addMessage.bind(this);
+        this.clearMessages = this.clearMessages.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        this.subscribe = this.subscribe.bind(this);
+
         this.initSubscriptions();
+        this.subscriptions = [];
+    }
+
+    // Convert getter methods to arrow functions to preserve context
+    isLoading = () => {
+        return this.state.loading;
     }
 
     setState(newState) {
         this.state = { ...this.state, ...newState };
         this.emit('update', this.state);
+        this.subscriptions.forEach(sub => sub(this.state));
     }
 
     initSubscriptions() {
         this.sseClient.on('history', (data) => {
             this.setState({ history: data });
             this.emit('historyChange', data);
+            this.subscriptions.forEach(sub => sub(this.state));
         });
         this.sseClient.once('message', () => {
             this.emit('startedLoading', true);
@@ -65,14 +83,17 @@ export default class MessagesManager extends EventEmitter {
             }
             this.setState({ messages: this.state.messages });
             this.emit('messagesChange', Array.from(this.state.messages.values()));
+            this.subscriptions.forEach(sub => sub(this.state));
         });
         this.sseClient.on('objectProperties', (data) => {
             this.setState({ objectProperties: data });
             this.emit('objectPropertiesChange', data);
+            this.subscriptions.forEach(sub => sub(this.state));
         });
         this.sseClient.on('error', (data) => {
             this.setState({ errors: data });
             this.emit('error', data);
+            this.subscriptions.forEach(sub => sub(this.state));
         });
     }
 
@@ -80,16 +101,29 @@ export default class MessagesManager extends EventEmitter {
         this.state.messages.set(Date.now(), new Message(message, sender));
         this.setState({ messages: this.state.messages });
         this.emit('messagesChange', Array.from(this.state.messages.values()));
+        this.subscriptions.forEach(sub => sub(this.state));
     }
 
     clearMessages() {
         this.state.messages.clear();
         this.setState({ messages: this.state.messages });
         this.emit('messagesChange', []);
+        this.subscriptions.forEach(sub => sub(this.state));
     }
 
     get messages() {
         return Array.from(this.state.messages.values());
+    }
+
+    subscribe(fn) {
+        this.subscriptions.push(fn);
+        return () => {
+            this.subscriptions = this.subscriptions.filter(sub => sub !== fn);
+        }
+    }
+
+    getState() {
+        return this.state
     }
 
     get history() {
