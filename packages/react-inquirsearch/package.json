@@ -1,6 +1,6 @@
 {
   "name": "@inquir/react-inquirsearch",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "React components for Inquir Search",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -9,6 +9,7 @@
     "definition": "dist/index.d.ts"
   },
   "scripts": {
+    "pub": "npm publish --access public",
     "clean": "rimraf dist",
     "build": "webpack --mode production && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir ./dist/types",
